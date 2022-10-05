@@ -1,0 +1,2 @@
+# azure-ha-cosmosdb
+This infrastructure oriented repo is for the sole purpose of deploying a HA deployment of a cosmos account and database into a Maolte demo subscription on Azure from Azure DevOps CICD pipeline via secure connection. Nothing more to see here save a multi region cosmosDB deployment using Azure's IaC ARM JSON template with parameters file and a secret deployed from Azure KeyVault via ARM service connection. This is for demo purposes only but is reusable as IaC once you configure your sub with the appropriate key vault values.
