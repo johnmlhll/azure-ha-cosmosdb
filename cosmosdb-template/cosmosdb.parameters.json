@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "accountName": {
+            "value": "maolteDemoAccount"
+        },
+        "location":{
+            "value": "[resourceGroup().location]"
+        },
+        "primaryRegion":{
+            "value":"westeurope"
+        },
+        "secondaryRegion":{
+            "value":"northeurope"
+        },
+        "defaultConsistencyLevel":{
+            "value":"Eventual"
+        },
+        "maxStalenessPrefix":{
+            "value":150000
+        },
+        "minIntervalInSeconds":{
+            "value":350
+        },
+        "systemManagedFailover": {
+            "value": true
+        },
+        "databaseName":{
+            "value": "maolteDemoDB"
+        },
+        "containerName": {
+            "value": "maolteDemoInstContainer"
+        },
+        "throughput": {
+            "value":750
+        }
+    }
+}

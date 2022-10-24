@@ -1,0 +1,261 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion":"1.0.0.0",
+    "metadata":{
+        "_generator": {
+            "name":"bicep",
+            "version":"0.9.1.41621",
+            "templateHash":"13701948159885019128"
+        }
+    },
+    "parameters":{
+        "accountName": {
+            "type": "string",
+            "defaultValue": "[format('sql-{}', uniqueString(resourceGroup().id))]",
+            "metadata": {
+                "description":"Cosmosdb account name on Azure, 44 character max"
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description":"Location/region of CosmosDB account on Azure"
+            }
+        },
+        "primaryRegion": {
+            "type": "string",
+            "metadata":{
+                "description": "Primary region for running CosmosDB account"
+            }
+        },
+        "secondaryRegion": {
+            "type": "string",
+            "metadata":{
+                "description": "Secondary region for failover over CosmosDB account"
+            }
+        },
+        "defaultConsistencyLevel": {
+            "type":"string",
+            "defaultValue":"Session",
+            "metadata":{
+                "description": "the default database consistency level for the CosmosDB account instances"
+            },
+            "allowedValues":[
+                "Eventual",
+                "ConsistentPrefix",
+                "Session",
+                "BoundedStaleness",
+                "Strong"
+            ]
+        },
+        "maxStalenessPrefix": {
+            "type":"int",
+            "defaultValue":100000,
+            "metadata":{
+                "description":"max stale request count for the Bounded Staleness consistency policy. Multi Region ranges 100,000 - 2,147,483,647 (single region can be >10)"
+            },
+            "maxValue":2147483647,
+            "minValue":100000
+        },
+        "maxIntervalInSeconds":{
+            "type":"int",
+            "defaultValue":300,
+            "metadata":{
+                "description": "max lag time in minutes for boundless stalesness consistency policy. Valid ranges for multi region 300 to 86,400 (single region can be >5)"
+            },
+            "maxValue":86400,
+            "minValue":300
+        },
+        "systemManagedFailover": {
+            "type":"bool",
+            "defaultValue":true,
+            "metadata":{
+                "description":"System failover between regions configuration"
+            }
+        },
+        "databaseName": {
+            "type":"string",
+            "defaultValue":"defaultMaolteDB",
+            "metadata": {
+                "description": "The name of the database instance on CosmosDB"
+            }
+        },
+        "containerName": {
+            "type":"string",
+            "defaultValue":"defaultMaolteDBInstContainer",
+            "metadata": {
+                "description": "CosmosDB database instance container name"
+            }
+        },
+        "throughput":{
+            "type":"int",
+            "defaultValue":400,
+            "metadata":{
+                "description":"The instance container throughput at logical level"
+            },
+            "maxValue":1000000,
+            "minValue":400
+        },
+        "resourceTags":{
+            "type":"object",
+            "defaultValue": {
+                "type":"rg-cicd",
+                "classification":"demo",
+                "function":"marketing",
+                "billing":"internal",
+                "area":"devops",
+                "resource":"database-storage"
+            }
+
+        }
+    },
+    "variables": {
+        "consistencyPolicy": {
+            "Eventual":{
+                "defaultConsistencyLevel": "Eventual"
+            },
+            "ConsistentPrefix": {
+                "defaultConsistencyLevel": "ConsistentPrefix"
+            },
+            "Session": {
+                "defaultConsistencyLevel":"Session"
+            },
+            "BoundedStaleness": {
+                "defaultConsistencyLevel":"BoundedStaleness",
+                "maxStalenessPrefix":"[parameters('maxStalenessPrefix')]",
+                "maxIntervalInSeconds":"[parameters('maxIntervalInSeconds')]"
+            },
+            "Strong":{
+                "defaultConsistencyLevel":"Strong"
+            }
+        },
+        "locations":[
+            {
+                "locationName":"[parameters('primaryRegion')]",
+                "failoverPriority":0,
+                "isZoneRedundant":false
+            },
+            {
+                "locationName":"[parameters('secondaryRegion')]",
+                "failoverPriority":1,
+                "isZoneRedundant":false
+            }
+        ]
+    },
+    "resources": [
+        {
+            "type":"Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion":"2022-05-15",
+            "name":"[toLower(parameters('accountName'))]",
+            "location":"[parameters('locations')]",
+            "kind":"GlobalDocumentDB",
+            "tags":"[parameters('resourceTags')]",
+            "properties":{
+                "enableFreeTier":true,
+                "consistencyPolicy":"[variables('consistencyPolicy')[parameters('defaultConsistencyLevel')]]",
+                "locations":"[variables('locations')]",
+                "databaseAccountOfferType":"Standard",
+                "enableAutomaticFailover":"[parameters('systemManagedFailover')]"
+            }
+        },
+        {
+            "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
+            "apiVersion":"2022-05-15",
+            "name":"[format('{0}/{1}', toLower(parameters('accountName'), parameters('databaseName'))]",
+            "tags":"[parameters('resourceTags')]",
+            "properties": {
+                "resource":{
+                    "id":"[parameters('databaseName')]"
+                }
+            },
+            "dependsOn":[
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts',toLower(parameters('accountName')))]"
+            ]
+        },
+        {
+            "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+            "apiVersion":"2022-05-15",
+            "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parmeters('databaseName')), parameter('containerName'))]",
+            "properties":{
+                "resource":{
+                    "id":"[parameters('containerName')]",
+                    "partitionKey":{
+                        "paths":[
+                            "/maoltePartitionKey"
+                        ],
+                        "kind":"Hash"
+                    },
+                    "indexingPolicy": {
+                        "indexingMode":"consistent",
+                        "includedPaths":[
+                            {
+                                "path":"/*"
+                            }
+                        ],
+                        "excludedPaths":[
+                            {
+                                "path":"/_etag/?"
+                            }
+                        ],
+                        "compositeIndexes": [
+                            [
+                                {
+                                    "path":"/name",
+                                    "order":"ascending"
+                                },
+                                {
+                                    "path":"/age",
+                                    "order":"descending"
+                                }
+                            ]
+                        ],
+                        "spatialIndexes": [
+                            {
+                                "path":"/location/*",
+                                "types": [
+                                    "Point",
+                                    "Polygon",
+                                    "MultiPolygon",
+                                    "LineString"
+                                ]
+                            }
+                        ]
+                    },
+                    "defaultTtl":"84600",
+                    "uniqueKeyPolicy": {
+                        "uniqueKeys": [
+                            {
+                                "paths": [
+                                    "/phonenumber"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "options": {
+                    "throughput": "[parameters('throughput')]",
+                    "tags":"[parameters('resourceTags')]",
+                    
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), '/')[0], split(format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), '/')[1])]"
+            ]
+        },
+        {
+            "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/storedProcedures",
+            "apiVersion":"2022-05-15",
+            "name":"[format('{0}/{1}/{2}/{3}', toLower(parameters('accountName')), parameters('databaseName'), parameters('containerName'), 'spHelloMaolte')]",
+            "properties": {
+                "resource": {
+                    "id":"spHelloWorld",
+                    "body":"function() {var context = getContext(); var response = context.getResponse(); responses.setBody('Hello, Maolte');}"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers', toLower(parameters('accountName')), parameters('databaseName'), parameters('containerName'))]"
+            ]
+        }
+    ]
+}

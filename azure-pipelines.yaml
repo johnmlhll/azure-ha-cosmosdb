@@ -1,0 +1,40 @@
+name: $(BuildDefinitionName)_$(date:yyyyMMdd)$(rev:r)
+
+trigger: none
+
+variables:
+  - group: 'demo-sub-keyvault-group'
+
+stages:
+  - stage: arm_template_deploy
+    jobs:
+      - job: arm_vnet_deploy
+        steps:
+          - checkout: self
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'CosmosDB-DemoSub'
+              subscriptionId: $(demoSubSecret)
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: 'demoRG'
+              location: 'westeurope'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(System.DefaultWorkingDirectory)/vnet-cosmos-app-template/vnet-cosmos-config.json'
+              csmParametersFile: 'S(System.DefaultWorkingDirectory)/cosmosdb-template/vnet-cosmos.parameters.json'
+              deploymentMode: 'incremental'
+      - job: cosmos_db_deploy
+        steps:
+          - checkout: self
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'CosmosDB-DemoSub'
+              subscriptionId: $(demoSubSecret)
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: 'demoRG'
+              location: 'westeurope'
+              templateLocation: 'Linked Artifact' 
+              csmFile: '$(System.DefaultWorkingDirectory)/cosmosdb-template/cosmosdb-deployment.json'
+              csmParametersFile: 'S(System.DefaultWorkingDirectory)/cosmosdb-template/cosmosdb.parameters.json'
+              deploymentMode: 'Incremental'

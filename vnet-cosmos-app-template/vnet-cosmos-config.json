@@ -1,0 +1,106 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type":"string",
+            "metadata": {
+                "description":"vNet name for deployment in the cosmosdb demo project"
+            }
+        },
+        "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description":"vNet address prefix for hosting an app using the cosmosdb (h/a) account storage"
+            }
+        },
+        "subnet1Name": {
+            "type":"string",
+            "metadata": {
+                "description":"Public subnet for hosting application that is linked to a h/a instance of cosmosdb"
+            }
+        },
+        "subnet1Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/24",
+            "metadata": {
+                "description":"Public subnet prefix based on a 256 range at /24"
+            }
+        },
+        "subnet2Name": {
+            "type": "string",
+            "metadata": {
+                "description":"Private subnet name for hosting the connection to cosmosdb instance"
+            }
+        },
+        "subnet2Prefix": {
+            "type":"string",
+            "defaultValue": "10.0.1.0/24",
+            "metadata": {
+                "description":"Private subnet prefix for hosting the cosmosdb storage/data connection for the app"
+            }
+        },
+        "location": {
+            "type":"string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "deployed resource group location for the cosmosdb demo vnet"
+            }
+        },
+        "resourceTags": {
+            "type": "object",
+            "defaultValue": {
+                "type":"rg-cicd",
+                "classification":"demo",
+                "function":"marketing",
+                "billing":"internal",
+                "area":"devops"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type":"Microsoft.Network/virtualNetworks",
+            "apiVersion":"2020-05-01",
+            "name":"[parameters('vnetName')]",
+            "location":"[parameters('location')]",
+            "properties":{
+                "addressSpace":{
+                    "addressPrefixes":[
+                        "[parameters('vnetAddressPrefix')]"
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "type": "subnets",
+                    "apiVersion":"2020-05-01",
+                    "location":"[parameters('location')]",
+                    "tags":"[parameters('resourceTags')]",
+                    "name":"[parameters('subnet1Name')]",
+                    "dependsOn":[
+                        "[parameters('vnetName')]"
+                    ],
+                    "properties" : {
+                        "addressPrefix": "[parameters('subnet1Prefix')]"
+                    }
+                },
+                {
+                    "type":"subnets",
+                    "apiVersion":"2020-05-01",
+                    "name":"[parameters('subnet2Name')]",
+                    "location":"[parameters('location')]",
+                    "tags":"[parameters('resourceTags')]",
+                    "dependsOn":[
+                        "[parameters(vnetName)]"
+                    ],
+                    "properties":{
+                        "addressPrefix": "[parameters('subnet2Prefix')]"
+                    }
+                }
+            ]
+        }
+    ]
+}
