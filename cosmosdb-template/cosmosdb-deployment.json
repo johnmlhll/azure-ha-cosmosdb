@@ -106,8 +106,10 @@
                 "billing":"internal",
                 "area":"devops",
                 "resource":"database-storage"
+            },
+            "metadata": {
+                "description":"resource tags for cosmosdb layers"
             }
-
         }
     },
     "variables": {
