@@ -6,9 +6,11 @@ variables:
   - group: 'demo-cosmos-keyvault-group'
 
 stages:
-  - stage: arm_template_deploy
+  - stage: vnet_template_deploy
+    displayName: 'V-Net Template Deployment Stage'
     jobs:
       - job: arm_vnet_deploy
+        displayName: 'V-Net Deployment job'
         steps:
           - checkout: self
           - task: AzureResourceManagerTemplateDeployment@3
@@ -21,9 +23,13 @@ stages:
               location: 'westeurope'
               templateLocation: 'Linked artifact'
               csmFile: '$(System.DefaultWorkingDirectory)/vnet-cosmos-app-template/vnet-cosmos-config.json'
-              csmParametersFile: 'S(System.DefaultWorkingDirectory)/vnet-cosmos-app-template/vnet-cosmos.parameters.json'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/vnet-cosmos-app-template/vnet-cosmos.parameters.json'
               deploymentMode: 'incremental'
+  - stage: cosmosdb_template_deploy
+    displayName: 'CosmosDB MultiRegion Deploy Stage'
+    jobs:
       - job: cosmos_db_deploy
+        displayName: 'CosmosDB Deployment job'
         steps:
           - checkout: self
           - task: AzureResourceManagerTemplateDeployment@3
@@ -36,5 +42,5 @@ stages:
               location: 'westeurope'
               templateLocation: 'Linked artifact' 
               csmFile: '$(System.DefaultWorkingDirectory)/cosmosdb-template/cosmosdb-deployment.json'
-              csmParametersFile: 'S(System.DefaultWorkingDirectory)/cosmosdb-template/cosmosdb.parameters.json'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/cosmosdb-template/cosmosdb.parameters.json'
               deploymentMode: 'Incremental'
