@@ -49,9 +49,9 @@
             }
         },
         "resourceTags": {
-            "type": "string",
+            "type": "object",
             "defaultValue": {
-                "type":"rg-cicd",
+                "resource-category":"rg-cicd",
                 "classification":"demo",
                 "function":"marketing",
                 "billing":"internal",
