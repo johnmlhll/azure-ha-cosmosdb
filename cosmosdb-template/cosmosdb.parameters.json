@@ -34,14 +34,6 @@
         },
         "throughput": {
             "value":750
-        },
-        "resourceTags":{
-            "value": {
-                "resource-category":"rg-cicd",
-                "classification":"demo",
-                "function":"marketing",
-                "billing":"internal",
-                "area":"devops"
-            }
+        }
     }
 }

@@ -47,19 +47,6 @@
             "metadata": {
                 "description": "deployed resource group location for the cosmosdb demo vnet"
             }
-        },
-        "resourceTags": {
-            "type": "object",
-            "defaultValue": {
-                "resource-category":"rg-cicd",
-                "classification":"demo",
-                "function":"marketing",
-                "billing":"internal",
-                "area":"devops"
-            },
-            "metadata": {
-                "description":"resource tags for vnet infra"
-            }
         }
     },
     "variables": {},
@@ -81,7 +68,6 @@
                     "type": "subnets",
                     "apiVersion":"2020-05-01",
                     "location":"[parameters('location')]",
-                    "tags":"[parameters('resourceTags')]",
                     "name":"[parameters('subnet1Name')]",
                     "dependsOn":[
                         "[parameters('vnetName')]"
@@ -95,7 +81,6 @@
                     "apiVersion":"2020-05-01",
                     "name":"[parameters('subnet2Name')]",
                     "location":"[parameters('location')]",
-                    "tags":"[parameters('resourceTags')]",
                     "dependsOn":[
                         "[parameters('vnetName')]"
                     ],

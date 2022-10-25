@@ -19,15 +19,6 @@
         },
         "subnet2Prefix":{
             "value": "10.0.1.0/24"
-        },
-        "resourceTags":{
-            "value": {
-                "resource-category":"rg-cicd",
-                "classification":"demo",
-                "function":"marketing",
-                "billing":"internal",
-                "area":"devops"
-            }
         }
     }
 }

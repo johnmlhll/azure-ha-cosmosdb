@@ -152,23 +152,23 @@
             "name":"[toLower(parameters('accountName'))]",
             "location":"[parameters('locations')]",
             "kind":"GlobalDocumentDB",
-            "tags":"[parameters('resourceTags')]",
             "properties":{
                 "enableFreeTier":true,
                 "consistencyPolicy":"[variables('consistencyPolicy')[parameters('defaultConsistencyLevel')]]",
                 "locations":"[variables('locations')]",
                 "databaseAccountOfferType":"Standard",
-                "enableAutomaticFailover":"[parameters('systemManagedFailover')]"
+                "enableAutomaticFailover":"[parameters('systemManagedFailover')]",
+                "tags":"[parameters('resourceTags')]"
             }
         },
         {
             "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
             "apiVersion":"2022-05-15",
             "name":"[format('{0}/{1}', toLower(parameters('accountName'), parameters('databaseName'))]",
-            "tags":"[parameters('resourceTags')]",
             "properties": {
                 "resource":{
-                    "id":"[parameters('databaseName')]"
+                    "id":"[parameters('databaseName')]",
+                    "tags":"[parameters('resourceTags')]"
                 }
             },
             "dependsOn":[
@@ -182,6 +182,7 @@
             "properties":{
                 "resource":{
                     "id":"[parameters('containerName')]",
+                    "tags":"[parameters('resourceTags')]",
                     "partitionKey":{
                         "paths":[
                             "/maoltePartitionKey"
@@ -253,7 +254,8 @@
                 "resource": {
                     "id":"spHelloWorld",
                     "body":"function() {var context = getContext(); var response = context.getResponse(); responses.setBody('Hello, Maolte');}"
-                }
+                },
+                "tags":"[parameters('resourceTags')]"
             },
             "dependsOn": [
                 "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers', toLower(parameters('accountName')), parameters('databaseName'), parameters('containerName'))]"
