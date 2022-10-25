@@ -49,7 +49,7 @@
             }
         },
         "resourceTags": {
-            "type": "object",
+            "type": "string",
             "defaultValue": {
                 "type":"rg-cicd",
                 "classification":"demo",
