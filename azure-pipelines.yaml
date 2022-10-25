@@ -3,7 +3,7 @@ name: $(BuildDefinitionName)_$(date:yyyyMMdd)$(rev:r)
 trigger: none
 
 variables:
-  - group: 'demo-sub-keyvault-group'
+  - group: 'demo-cosmos-keyvault-group'
 
 stages:
   - stage: arm_template_deploy
@@ -21,7 +21,7 @@ stages:
               location: 'westeurope'
               templateLocation: 'Linked artifact'
               csmFile: '$(System.DefaultWorkingDirectory)/vnet-cosmos-app-template/vnet-cosmos-config.json'
-              csmParametersFile: 'S(System.DefaultWorkingDirectory)/cosmosdb-template/vnet-cosmos.parameters.json'
+              csmParametersFile: 'S(System.DefaultWorkingDirectory)/vnet-cosmos-app-template/vnet-cosmos.parameters.json'
               deploymentMode: 'incremental'
       - job: cosmos_db_deploy
         steps:
@@ -34,7 +34,7 @@ stages:
               action: 'Create Or Update Resource Group'
               resourceGroupName: 'demoRG'
               location: 'westeurope'
-              templateLocation: 'Linked Artifact' 
+              templateLocation: 'Linked artifact' 
               csmFile: '$(System.DefaultWorkingDirectory)/cosmosdb-template/cosmosdb-deployment.json'
               csmParametersFile: 'S(System.DefaultWorkingDirectory)/cosmosdb-template/cosmosdb.parameters.json'
               deploymentMode: 'Incremental'

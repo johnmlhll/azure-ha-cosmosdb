@@ -94,7 +94,7 @@
                     "location":"[parameters('location')]",
                     "tags":"[parameters('resourceTags')]",
                     "dependsOn":[
-                        "[parameters(vnetName)]"
+                        "[parameters('vnetName')]"
                     ],
                     "properties":{
                         "addressPrefix": "[parameters('subnet2Prefix')]"
