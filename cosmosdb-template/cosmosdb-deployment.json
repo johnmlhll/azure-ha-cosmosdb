@@ -178,7 +178,7 @@
         {
             "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
             "apiVersion":"2022-05-15",
-            "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), parameter('containerName'))]",
+            "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), parameters('containerName'))]",
             "properties":{
                 "resource":{
                     "id":"[parameters('containerName')]",
