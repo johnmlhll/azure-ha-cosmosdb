@@ -20,7 +20,7 @@
         "maxStalenessPrefix":{
             "value":150000
         },
-        "minIntervalInSeconds":{
+        "maxIntervalInSeconds":{
             "value":350
         },
         "systemManagedFailover": {
