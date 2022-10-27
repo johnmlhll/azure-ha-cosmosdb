@@ -164,7 +164,7 @@
         {
             "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
             "apiVersion":"2022-05-15",
-            "name":"[format('{0}/{1}', toLower(parameters('accountName'), parameters('databaseName'))]",
+            "name":"[format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName'))]",
             "properties": {
                 "resource":{
                     "id":"[parameters('databaseName')]",
@@ -178,7 +178,7 @@
         {
             "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
             "apiVersion":"2022-05-15",
-            "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parmeters('databaseName')), parameter('containerName'))]",
+            "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), parameter('containerName'))]",
             "properties":{
                 "resource":{
                     "id":"[parameters('containerName')]",
