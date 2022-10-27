@@ -20,7 +20,7 @@
             "type": "string",
             "defaultValue": "[resourceGroup().location]",
             "metadata": {
-                "description":"Location/region of CosmosDB account on Azure"
+                "description":"Region of CosmosDB account on Azure"
             }
         },
         "primaryRegion": {

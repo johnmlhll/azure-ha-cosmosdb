@@ -5,9 +5,6 @@
         "accountName": {
             "value": "maolteDemoAccount"
         },
-        "location":{
-            "value": "[resourceGroup().location]"
-        },
         "primaryRegion":{
             "value":"westeurope"
         },
