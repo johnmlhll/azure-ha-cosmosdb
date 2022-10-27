@@ -150,7 +150,7 @@
             "type":"Microsoft.DocumentDB/databaseAccounts",
             "apiVersion":"2022-05-15",
             "name":"[toLower(parameters('accountName'))]",
-            "location":"[parameters('locations')]",
+            "location":"[parameters('location')]",
             "kind":"GlobalDocumentDB",
             "properties":{
                 "enableFreeTier":true,
