@@ -160,7 +160,7 @@
             ]
         },
         {
-            "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+            "type":"Microsoft.Resources/deployments",
             "apiVersion":"2022-05-15",
             "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), parameters('containerName'))]",
             "properties":{
