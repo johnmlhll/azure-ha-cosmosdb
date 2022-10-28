@@ -165,7 +165,7 @@
             "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), parameters('containerName'))]",
             "properties":{
                 "resource":{
-                    "id":"[parameters('containerName')]"
+                    "id":"[parameters('containerName')]",
                     "partitionKey":{
                         "paths":[
                             "/maoltePartitionKey"
