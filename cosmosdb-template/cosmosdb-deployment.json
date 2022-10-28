@@ -168,7 +168,7 @@
                     "id":"[parameters('containerName')]",
                     "partitionKey":{
                         "paths":[
-                            "/maoltePartitionKey"
+                            "/idmaolte"
                         ],
                         "kind":"Hash"
                     },
@@ -213,7 +213,7 @@
                         "uniqueKeys": [
                             {
                                 "paths": [
-                                    "/phonenumber"
+                                    "/phoneNumber"
                                 ]
                             }
                         ]
