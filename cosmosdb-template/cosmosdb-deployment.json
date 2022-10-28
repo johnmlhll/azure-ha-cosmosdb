@@ -234,7 +234,7 @@
             "name":"[format('{0}/{1}/{2}/{3}', toLower(parameters('accountName')), parameters('databaseName'), parameters('containerName'), 'spHelloMaolte')]",
             "properties": {
                 "resource": {
-                    "id":"spHelloWorld",
+                    "id":"spHelloMaolte",
                     "body":"function() {var context = getContext(); var response = context.getResponse(); responses.setBody('Hello, Maolte');}"
                 }
             },
