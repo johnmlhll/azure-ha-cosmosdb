@@ -160,7 +160,7 @@
             ]
         },
         {
-            "type":"Microsoft.Resources/deployments",
+            "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
             "apiVersion":"2022-05-15",
             "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), parameters('containerName'))]",
             "properties":{
@@ -226,20 +226,6 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), '/')[0], split(format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), '/')[1])]"
-            ]
-        },
-        {
-            "type":"Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/storedProcedures",
-            "apiVersion":"2022-05-15",
-            "name":"[format('{0}/{1}/{2}/{3}', toLower(parameters('accountName')), parameters('databaseName'), parameters('containerName'), 'spHelloMaolte')]",
-            "properties": {
-                "resource": {
-                    "id":"spHelloMaolte",
-                    "body":"function() {var context = getContext(); var response = context.getResponse(); responses.setBody('Hello, Maolte');}"
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers', toLower(parameters('accountName')), parameters('databaseName'), parameters('containerName'))]"
             ]
         }
     ]
