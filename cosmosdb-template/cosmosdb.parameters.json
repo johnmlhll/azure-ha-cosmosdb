@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "accountName": {
-            "value": "maolte-demo-account"
+            "value": "maolteDemoMultiRegAc"
         },
         "primaryRegion":{
             "value":"westeurope"
