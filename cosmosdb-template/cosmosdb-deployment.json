@@ -155,7 +155,7 @@
                     "id":"[parameters('databaseName')]"
                 },
                 "options": {
-                    "throughput": 1000
+                    "throughput": 950
                 }
             },
             "dependsOn":[
@@ -165,7 +165,13 @@
         {
             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
             "apiVersion": "2022-05-15",
-            "name": "[format('{0}/{1}',format('{0}/{1}', toLower(parameters('accountName')), parameters('databaseName')), parameters('containerName'))]",
+            "name": "[format('{0}/{1}/{2}', toLower(parameters('accountName'), parameters('databaseName'), parameters('containerName')))]",
+            "tags": {
+                "resource-category":"rg-cicd",
+                "billing":"internal",
+                "resource-classification":"demo",
+                "dept":"marketing"
+            },
             "properties": {
                 "resource": {
                     "id":"[parameters('containerName')]",
@@ -176,7 +182,7 @@
                         "kind":"Hash"
                     },
                     "indexingPolicy": {
-                        "indexingMode":"consistent",
+                        "indexingMode":"Consistent",
                         "includedPaths":[
                             {
                                 "path":"/*"
@@ -191,11 +197,11 @@
                             [
                                 {
                                     "path":"/name",
-                                    "order":"ascending"
+                                    "order":"Ascending"
                                 },
                                 {
                                     "path":"/age",
-                                    "order":"descending"
+                                    "order":"Descending"
                                 }
                             ]
                         ],
@@ -211,7 +217,7 @@
                             }
                         ]
                     },
-                    "defaultTtl":"84600",
+                    "defaultTtl":"integer",
                     "uniqueKeyPolicy": {
                         "uniqueKeys": [
                             {
