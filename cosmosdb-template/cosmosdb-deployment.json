@@ -217,7 +217,7 @@
                             }
                         ]
                     },
-                    "defaultTtl":"integer",
+                    "defaultTtl":86400,
                     "uniqueKeyPolicy": {
                         "uniqueKeys": [
                             {
