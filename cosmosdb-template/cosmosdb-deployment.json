@@ -155,7 +155,7 @@
                     "id":"[parameters('databaseName')]"
                 },
                 "options": {
-                    "throughput": 950
+                    "throughput": 900
                 }
             },
             "dependsOn":[
